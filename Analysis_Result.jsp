@@ -2,7 +2,7 @@
 	pageEncoding="BIG5"%>
 <%@ page language="java" import="java.sql.*"%>
 <%@ page language="java" import="com.mysql.jdbc.Driver"%>
-<%@page import="java.text.DecimalFormat" %>
+<%@page import="java.text.DecimalFormat"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -478,51 +478,80 @@ function Example() {
 </script>
 
 <script>
-	$(function() {
-$("#Column").click(function() {
-	$("#dialog-Column").dialog("open");
+function Structure_View(SMILES_)
+{
+	var iframe_=document.getElementById("JMOL_Show");
+	iframe_.width=document.body.clientWidth*0.265;
+	iframe_.src="JSMOL_Show.jsp?SMILES_="+encodeURIComponent(SMILES_);
 
-});
-$("#dialog-Column").dialog({
-	modal : true,
-	autoOpen : false,
-	resizable : false,
-	draggable : false,
-	minHeight : 320,
-	minWidth : 250,
-	open : function(event, ui) {
-		var display = $("#Adv_DIV").css("display");
-		if ($("#Adv_DIV").is(":hidden")) {
+	$("#Div_Structure").dialog("open");
+}
+</script>
+
+<script>
+$(function() {
+	$("#Column").click(function() {
+		$("#dialog-Column").dialog("open");
+		
+	});
+	$("#dialog-Column").dialog({
+		modal : true,
+		autoOpen : false,
+		resizable : false,
+		draggable : false,
+		minHeight : 320,
+		minWidth : 250,
+		open : function(event, ui) {
+			var display =$("#Adv_DIV").css("display");
+			if($("#Adv_DIV").is(":hidden"))
+			{
 			$(this).parent().css({
-				"top" : 200,
-				"left" : document.body.clientWidth * 0.61
+				"top" : 280,
+				"left":document.body.clientWidth*0.5
 			});
-		} else {
-			$(this).parent().css({
-				"top" : 335,
-				"left" : document.body.clientWidth * 0.61
-			});
-		}
-	},
-	buttons : {
-		"Ok" : function() {
-			changeShowOP();
-			$(this).dialog('close');
+			}
+			else
+			{
+				$(this).parent().css({
+					"top" : 335,
+					"left":document.body.clientWidth*0.61
+				});
+			}
 		},
-		"Cancel" : function() {
-			$(this).dialog('close');
-			return false;
+		buttons : {
+			"Ok" : function() {
+				changeShowOP();
+				$(this).dialog('close');
+			},
+			"Cancel" : function() {
+				$(this).dialog('close');
+				return false;
+			}
 		}
-	}
-});
+	});
+
+	$("#Div_Structure").dialog({
+		modal : true,
+		autoOpen : false,
+		resizable : false,
+		draggable : false,
+		minHeight : 400,
+		minWidth : 	document.body.clientWidth*0.25,
+		open : function(event, ui) {
+			$(this).parent().css({
+				"top" :275,
+				"left" : 70
+			});
+		}
+	});
 });
 </script>
 
 </head>
 <body onload="load_condition()">
 	<div id="Persious_inform">
-		<form id="total_inform" name="total_inform" action="Analysis_Result.jsp"
-			method="POST">
+		<form id="total_inform" name="total_inform"
+			action="Analysis_Result.jsp" method="POST">
 			<input type='hidden' name='showop' id='showop' value=""> <input
 				type='hidden' name='shownum' id='shownum' value="10"> <input
 				type='hidden' name='now_page' id='now_page' value='1'> <input
@@ -542,9 +571,10 @@ $("#dialog-Column").dialog({
 	</div>
 	<div class="Center_DIV">
 		<a href="Analysis_Data.jsp"
-			title="Data set analysis for model training.">DataSet Analysis</a>
-			<a href="Analysis_RD.jsp"
-			title="Virtual Screening results distribution.">Results distribution</a>
+			title="Data set analysis for model training.">DataSet Analysis</a> <a
+			href="Analysis_RD.jsp"
+			title="Virtual Screening results distribution.">Results
+			distribution</a>
 	</div>
 	<hr>
 	<div id="Search_div">
@@ -927,7 +957,7 @@ $("#dialog-Column").dialog({
 			<%
 			int line = 0;
 			DecimalFormat df = new DecimalFormat("#0.000");
-			
+
 			while (result.next()) {
 				if (line % 2 == 0)
 					out.println("<tr class='tr_show'>");
@@ -936,7 +966,7 @@ $("#dialog-Column").dialog({
 
 				String smile = result.getString("SMILES");
 				out.println("<td class='td_show' align='center'><a herf='#' onclick='Structure_View(\"" + smile
-				+ "\")'>Select</a></td>");
+				+ "\")'>JSMOL</a></td>");
 				for (int i = 0; i < column.length; i++) {
 					switch (Integer.parseInt(column[i])) {
 					case 0:
@@ -946,19 +976,19 @@ $("#dialog-Column").dialog({
 				out.println("<td class='td_show' align='center'>" + result.getString("SMILES") + "</td>");
 				break;
 					case 2:
-				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("logP"))+ "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("logP")) + "</td>");
 				break;
 					case 3:
-				out.println("<td class='td_show' align='center'>" +  df.format(result.getDouble("QED")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("QED")) + "</td>");
 				break;
 					case 4:
-				out.println("<td class='td_show' align='center'>" + df.format( result.getDouble("SAS")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("SAS")) + "</td>");
 				break;
 					case 5:
-				out.println("<td class='td_show' align='center'>" +  df.format(result.getDouble("Active")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("Active")) + "</td>");
 				break;
 					case 6:
-				out.println("<td class='td_show' align='center'>" +  df.format(result.getDouble("Inactive")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("Inactive")) + "</td>");
 				break;
 					}
 				}
