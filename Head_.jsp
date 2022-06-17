@@ -23,11 +23,9 @@
 		<ul class="nav nav-tabs">
 			<li class="nav-item"><a class="nav-link" href="index.jsp"><font
 					size="4" color="white">Home</font></a></li>
-			<li class="nav-item"><a class="nav-link" href="Result_.jsp"><font
-					size="4" color="white">Result</font></a></li>
 			<li class="nav-item"><a class="nav-link" href="Predict_.jsp"><font
 					size="4" color="white">Predict</font></a></li>
-			<li class="nav-item"><a class="nav-link" href="Analysis_.jsp"><font
+			<li class="nav-item"><a class="nav-link" href="Analysis_Result.jsp"><font
 					size="4" color="white">Analysis</font></a></li>
 			<li class="nav-item"><a class="nav-link" href="News_.jsp"><font
 					size="4" color="white">News</font></a></li>

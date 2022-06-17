@@ -22,15 +22,7 @@
 		<h1 style="color: #642100">Contact Us</h1>
 		<br>
 		<p>
-			<font size="4">The database is constantly evolving. </font>
-		</p>
-		<p>
-			<font size="4">We always welcome the contributions of relevant
-				data published by the author.</font>
-		</p>
-		<p>
-			<font size="4">If the data is missing or incorrect, please
-				contact us.</font>
+			<font size="4">Please contact us if you have any questions about use, or if you have any suggestions for this study.</font>
 		</p>
 		<p>
 			<font size="4">Thank you for your feedback and suggestions for
@@ -49,7 +41,7 @@
 				<td align="center" >lth@mail.tcu.edu.tw</td>
 			</tr>
 			<tr>
-				<td align="center" style="padding: 8px;">Tzu Yin,Lin</td>
+				<td align="center" style="padding: 8px;">Zi Yin,Lin</td>
 				<td align="center"style="padding: 8px 10px;">109325107@gms.tcu.edu.tw</td>
 			</tr>
 		</table>
