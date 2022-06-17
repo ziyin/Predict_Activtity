@@ -4,13 +4,12 @@
 <%@ page language="java" import="java.util.*"%>
 <%@ page language="java" import="java.text.*"%>
 <%@ page language="java" import="java.nio.charset.Charset"%>
-
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="BIG5">
-<title>ALDH1A1_Activity</title>
-<jsp:include page="Head_.jsp" />
+<title>Company Name</title>
+<jsp:include page="Master.jsp" />
 <link rel="stylesheet" type="text/css" href="Style/jquery-ui.css">
 <link rel="stylesheet" type="text/css" href="Style/nouislider.css">
 <link rel="stylesheet" type="text/css" href="Style/Unite.css"
@@ -21,7 +20,7 @@
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 <%
-String smile = "", line = "";
+String smile = "",line="";
 double neg = 0.0, pos = 0.0;
 %>
 <script>
@@ -75,25 +74,26 @@ function Drug_Bank()
 		document.total_inform.DrugBankID.value = document.getElementById("Smiles_input").value;
 		document.total_inform.submit();
 		<%if (request.getParameter("DrugBankID") != null) {
-	if (!request.getParameter("DrugBankID").equals("")) {
-		String dbID = "";
-		dbID = request.getParameter("DrugBankID");
-		dbID = new String(dbID.getBytes("iso-8859-1"), "UTF-8");
+			if (!request.getParameter("DrugBankID").equals("")) {
+				String dbID ="";
+				dbID = request.getParameter("DrugBankID");
+				dbID = new String(dbID.getBytes("iso-8859-1"), "UTF-8");
+				
+				Runtime runtime = Runtime.getRuntime();
+				Process process;
 
-		Runtime runtime = Runtime.getRuntime();
-		Process process;
+				process = runtime.exec("cmd.exe /c C:\\Users\\ZIYIN\\Desktop\\drugbankID.bat " + dbID);
 
-		process = runtime.exec("cmd.exe /c C:\\Users\\ZIYIN\\Desktop\\drugbankID.bat " + dbID);
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()), 30);
-		smile = br.readLine();
-		if (smile == "©Ô©Ô") {
-			smile = "";
-		}
-		br.close();
-
-	}
-}%>
+				BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()), 30);
+				smile = br.readLine();
+				if(smile=="æ‹‰æ‹‰")
+				{
+					smile="";
+				}
+				br.close();
+				
+			}
+		}%>
 }
 </script>
 
@@ -103,7 +103,7 @@ function Drug_Bank()
 <script>
 function Check_SMILES()
 {
-	url="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/"+document.getElementById("Smiles_input").value+"/XML";
+	url="https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/smiles/"+document.getElementById("Smiles_input").value+"/SDF?record_type=3d";
 	  $.ajax({
 	        url: url,
 	        cache: false,
@@ -119,8 +119,7 @@ function Check_SMILES()
 	function Have_Search() {
 		$('#SearchFrom [value="SMILES"]').prop('selected', true)
 		document.getElementById("Have").style="display:none"
-		document.getElementById("init").style="display:block"
-			
+		
 		document.total_inform.Smiles.value="<%=smile%>";
 		var Jsmol_smile=document.getElementById("Smiles").value;
 		if(Jsmol_smile != "")
@@ -138,7 +137,6 @@ function Check_SMILES()
 			else
 			{
 				document.getElementById("Have").style="display:block"
-				document.getElementById("init").style="display:none"
 				var script = 'load :smiles:'+document.getElementById("Smiles").value+';spin on;';
 				Info = {
 					    spin:true,			
@@ -157,7 +155,7 @@ function Check_SMILES()
 function Search()
 {
 	document.getElementById("Have").style="display:none"
-	document.getElementById("init").style="display:block"
+	
 	if(document.getElementById("Smiles_input").value!="")
 	{
 		document.getElementById("Wait").innerHTML="Wait....";
@@ -170,6 +168,7 @@ function Search()
 			  Drug_Bank();
 		    break;
 		  default:
+			  
 		  break;
 		}	
 	}
@@ -189,6 +188,8 @@ function Example()
 	  case 'DrugBank':
 		  document.getElementById("Smiles_input").setAttribute("placeholder","eg.DB11331");
 	    break;
+	  default:
+		  document.getElementById("Smiles_input").setAttribute("placeholder","eg.ZINC000000000100");
 	  break;
 	}
 }
@@ -197,10 +198,10 @@ function Example()
 </head>
 <body onload="Have_Search()">
 	<div id="Persious_inform">
-		<form id="total_inform" name="total_inform" action="Predict_.jsp"
+		<form id="total_inform" name="total_inform" action="Predict.jsp"
 			method="POST">
-			<input type='hidden' name='Smiles' id='Smiles' value=""> <input
-				type='hidden' name='DrugBankID' id='DrugBankID' value="">
+			<input type='hidden' name='Smiles' id='Smiles' value="">
+			<input type='hidden' name='DrugBankID' id='DrugBankID' value="">
 		</form>
 	</div>
 	<input type="text" id="Smiles_input" placeholder="eg.C1=CC=C(C=C1)C=O"
@@ -208,10 +209,10 @@ function Example()
 	<select name="SearchFrom" ID="SearchFrom" onchange="Example()">
 		<option value="SMILES">SMILES String</option>
 		<option value="DrugBank">DrugBank ID</option>
+		<option value="ZINC" selected>ZINC ID</option>
 	</select>
-	<button style="border-radius: 6px; font-size: 16px" onclick="Search()">
-		<i class="fa fa-search"></i>
-	</button>
+	<button style="border-radius: 6px; font-size: 16px" onclick="Search()">Search</button>
+
 	<hr>
 	<div id="Wait" style="font-size: 20px;"></div>
 	<div id="Have">
@@ -235,38 +236,6 @@ function Example()
 					<td><div id="ina_" style="font-size: 18px;"></div></td>
 				</tr>
 			</table>
-		</div>
-	</div>
-	<div id="init">
-		<div style="float: left; width: 40%; padding-top: 50px; padding-left: 2%">
-			<p><font size="4">This function can be used to predict the probability that the
-				input compound is an ALDH1A1 active compound and an inactive
-				compound online, so as to evaluate whether the compound has a chance
-				to serve as a lead compound of ALDH1A1.
-				</font></p>
-			<p><font size="4">You can make predictions in two ways (1) SMILES string (2)
-				DrugBank ID. The prediction results are not only probabilistic, but
-				also present the 3D molecular graph of the compound you entered.
-				</font></p>
-
-			<p><font size="4">Get a better view of the structure with functions such as
-				azimuth movement, key color modification, or zooming in and out.
-				</font></p>
-		</div>
-		<div style="float: right; width: 55%; padding-top: 6%">
-			<h1 style="color: #642100">Predict process¡G</h1>
-			<p style="color: #642100">
-				<font size="4">1. Choose the type of data entered(Default is
-					SMILES String).</font>
-			</p>
-			<p style="color: #642100">
-				<font size="4">2. After the input is completed, press the
-					send button to wait for the prediction result.</font>
-			</p>
-			<p style="color: #642100">
-				<font size="4">3. Assuming the prediction is wrong, please
-					see the warning message.</font>
-			</p>
 		</div>
 	</div>
 </body>
