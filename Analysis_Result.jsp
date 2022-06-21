@@ -23,6 +23,16 @@
 <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="https://code.jquery.com/ui/1.10.2/jquery-ui.min.js"></script>
 <script src="Change_Page.js"></script>
+
+<style>
+.Menu_Choose {
+	border-width: 3px;
+	border-style: solid;
+	border-color: #D26900;
+	padding: 5px;
+}
+</style>
+
 <%
 //Init
 //DB
@@ -32,20 +42,20 @@ String Account = "root";
 String Password = "root";
 Connection connDB = null;
 //Item
-String[] ob = {"DB ID", "SMILES", "LogP", "QED", "SAS", "Active probability", "Inactive probability"};
-String sortdataop[] = {"DB ID", "SMILES", "LogP", "QED", "SAS", "Active", "Inactive"};
-String sortop[] = {"DB ID", "SMILES", "LogP", "QED", "SAS", "Active", "Inactive"};
+String[] ob = {"DB ID","ZINC ID","SMILES", "LogP", "QED", "SAS", "Active probability", "Inactive probability"};
+String sortdataop[] = {"DB ID","ZINCID", "SMILES", "LogP", "QED", "SAS", "Active", "Inactive"};
+String sortop[] = {"DB ID","ZINCID", "SMILES", "LogP", "QED", "SAS", "Active", "Inactive"};
 String Condition_Sql = "", SqlCommand = "";
 //Condition
 
-String SMILES = "";
+String ZINCID="",SMILES = "";
 String LogP1_s = "", LogP2_s = "", QED1_s = "", QED2_s = "", SAS1_s = "", SAS2_s = "", Act1_s = "", Act2_s = "",
 		Inact1_s = "", Inact2_s = "";
 Double LogP1 = -7.0, LogP2 = -7.0, QED1 = 0.0, QED2 = 0.0, SAS1 = 10.0, SAS2 = 10.0, Act1 = -1.0, Act2 = -1.0,
 		Inact1 = -1.0, Inact2 = -1.0;
 
 //Show condition
-String[] column = {"1", "2", "3", "4", "5", "6"}, Sort = null;
+String[] column = {"1", "2", "3", "4", "5", "6","7"}, Sort = null;
 int now_page = 1, total_page = 0, show_num = 10;
 String queue = "", resi_sort = "", resi_column = "";
 %>
@@ -69,6 +79,13 @@ if (request.getParameter("showop") != null) {
 		Sort = resi_sort.split(",");
 	}
 }
+if (request.getParameter("ZINCID") != null) {
+	if (!request.getParameter("ZINCID").equals("")) {
+		ZINCID = request.getParameter("ZINCID");
+		ZINCID = new String(ZINCID.getBytes("iso-8859-1"), "UTF-8").trim();
+	}
+}
+
 if (request.getParameter("SMILES") != null) {
 	if (!request.getParameter("SMILES").equals("")) {
 		SMILES = request.getParameter("SMILES");
@@ -146,6 +163,13 @@ if (request.getParameter("Inact1") != null) {
 
 <%
 //SQL COMMAND
+if (!ZINCID.equals("")) {
+	if (!Condition_Sql.equals(""))
+		Condition_Sql += " AND predict.ZINCID LIKE '" + ZINCID + "%'";
+	else
+		Condition_Sql += " WHERE predict.ZINCID LIKE '" + ZINCID + "%'";
+}
+
 if (!SMILES.equals("")) {
 	if (!Condition_Sql.equals(""))
 		Condition_Sql += " AND predict.SMILES LIKE '" + SMILES + "%'";
@@ -286,13 +310,13 @@ if (!Condition_Sql.equals("")) {
 				  document.total_inform.SMILES.value = keyword.value;
 			    break;
 			  case 'ZINC':
-				  
+				  document.total_inform.ZINCID.value = keyword.value;
 			    break;
 			  break;
 			}
 			
 			
-			document.total_inform.showop.value = "1,2,3,4,5,6";
+			document.total_inform.showop.value = "1,2,3,4,5,6,7";
 			document.total_inform.shownum.value = "10";
 			document.total_inform.now_page.value = "1";
 			document.total_inform.submit()
@@ -381,6 +405,7 @@ function load_condition()
 	document.total_inform.shownum.value="<%=show_num%>";
 	document.total_inform.now_page.value="<%=now_page%>";
 	document.total_inform.ordsort.value="<%=resi_sort%>";
+	document.total_inform.ZINCID.value="<%=ZINCID%>";
 	document.total_inform.SMILES.value="<%=SMILES%>";
 	document.total_inform.LogP1.value="<%=LogP1%>";	
 	document.total_inform.LogP2.value="<%=LogP2%>";
@@ -428,7 +453,9 @@ function Adv_tran() {
 
 <script>
 	function Cancel_Condition(Item) {
-	if (Item == "SMILES")
+	if (Item == "ZINCID")
+		document.total_inform.ZINCID.value = "";
+	else if (Item == "SMILES")
 		document.total_inform.SMILES.value = "";
 	else if (Item == "LogP") {
 		document.total_inform.LogP1.value = "";
@@ -467,10 +494,14 @@ function Example() {
 	case 'SMILES':
 		document.getElementById("KeyWord").setAttribute("placeholder",
 				"eg.C1=CC=C(C=C1)C=O");
+		document.getElementById("Hint_").setAttribute("title",
+		"SMILES strings can be searched from public databases,eg. ChemBL");
 		break;
 	case 'ZINC':
 		document.getElementById("KeyWord").setAttribute("placeholder",
 				"eg.ZINC39882712");
+	document.getElementById("Hint_").setAttribute("title",
+	"Please search for ZINC ID from the ZINC database.");
 		break;
 	break;
 }
@@ -555,7 +586,8 @@ $(function() {
 			<input type='hidden' name='showop' id='showop' value=""> <input
 				type='hidden' name='shownum' id='shownum' value="10"> <input
 				type='hidden' name='now_page' id='now_page' value='1'> <input
-				type='hidden' name='ordsort' id='ordsort' value=""> <input
+				type='hidden' name='ordsort' id='ordsort' value=""> 
+				<input type='hidden' name='ZINCID' id='ZINCID' value=""><input
 				type='hidden' name='SMILES' id='SMILES' value=""> <input
 				type='hidden' name='LogP1' id='LogP1' value=""> <input
 				type='hidden' name='LogP2' id='LogP2' value=""> <input
@@ -570,11 +602,12 @@ $(function() {
 		</form>
 	</div>
 	<div class="Center_DIV">
-		<a href="Analysis_Data.jsp"
-			title="Data set analysis for model training.">DataSet Analysis</a> <a
-			href="Analysis_RD.jsp"
-			title="Virtual Screening results distribution.">Results
+	 <font class="Menu_Choose"
+			style="color: #0072E3; text-decoration: none; font-size: 20px; font-weight: bold; padding: 5px 10px;">VS results</font> <a href="Analysis_RD.jsp"
+			title="Virtual Screening results distribution." class="Menu_Choose">Results
 			distribution</a>
+			<a href="Analysis_Data.jsp"
+			title="Data set analysis for model training." class="Menu_Choose">DataSet Analysis</a>
 	</div>
 	<hr>
 	<div id="Search_div">
@@ -586,7 +619,7 @@ $(function() {
 		</select>
 		<button style="border-radius: 6px; font-size: 16px"
 			onclick="Search_()">Search</button>
-
+			<img src="Image/question.png" id="Hint_" title="Please search for ZINC ID from the ZINC database.">
 		<br /> <br /> <a onclick="Advanced_search()"
 			style="font-size: 15px; text-decoration: underline;">Advanced</a>
 		<div class="Adv_DIV" style="display: none;" id="Adv_DIV">
@@ -761,13 +794,13 @@ $(function() {
 			changeInact(document.getElementById("Inact_From").value, document
 					.getElementById("Inact_To").value);
 		});
-		From_.addEventListener('change', function() {
+		From_I.addEventListener('change', function() {
 			Slider_.noUiSlider.set([ this.value, null ]);
 			changeInact(document.getElementById("Inact_From").value, document
 					.getElementById("Inact_To").value);
 		});
 
-		To_.addEventListener('change', function() {
+		To_I.addEventListener('change', function() {
 			Slider_.noUiSlider.set([ null, this.value ]);
 			changeInact(document.getElementById("Inact_From").value, document
 					.getElementById("Inact_To").value);
@@ -804,7 +837,11 @@ $(function() {
 				out.println("<br/><p> <font size='4'>Result:</font></p>");
 
 				boolean have = false;
-				if (SMILES != "") {
+				if(ZINCID != "") {
+					out.println("<a herf='#' onclick='Cancel_Condition(\"ZINCID\")'>(X)¡iZINC ID¡G" + ZINCID + "¡j</a>¡@");
+					have = true;
+						}
+				else if (SMILES != "") {
 			out.println("<a herf='#' onclick='Cancel_Condition(\"SMILES\")'>(X)¡iSMILES String¡G" + SMILES + "¡j</a>¡@");
 			have = true;
 				}
@@ -902,21 +939,24 @@ $(function() {
 						out.println("<td class='td_show' align='center'>DB ID");
 						break;
 					case 1:
-						out.println("<td class='td_show' align='center'>SMILES");
+						out.println("<td class='td_show' align='center'>ZINC ID");
 						break;
 					case 2:
-						out.println("<td class='td_show' align='center'>LogP");
+						out.println("<td class='td_show' align='center'>SMILES");
 						break;
 					case 3:
-						out.println("<td class='td_show' align='center'>QED");
+						out.println("<td class='td_show' align='center'>LogP");
 						break;
 					case 4:
-						out.println("<td class='td_show' align='center'>SAS");
+						out.println("<td class='td_show' align='center'>QED");
 						break;
 					case 5:
-						out.println("<td class='td_show' align='center'>Active probability");
+						out.println("<td class='td_show' align='center'>SAS");
 						break;
 					case 6:
+						out.println("<td class='td_show' align='center'>Active probability");
+						break;
+					case 7:
 						out.println("<td class='td_show' align='center'>Inactive probability");
 						break;
 					}
@@ -973,21 +1013,24 @@ $(function() {
 				out.println("<td class='td_show' align='center'>" + result.getString("No") + "</td>");
 				break;
 					case 1:
-				out.println("<td class='td_show' align='center'>" + result.getString("SMILES") + "</td>");
+				out.println("<td class='td_show' align='center'>" + result.getString("ZINCID") + "</td>");
 				break;
 					case 2:
-				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("logP")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + result.getString("SMILES") + "</td>");
 				break;
 					case 3:
-				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("QED")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("logP")) + "</td>");
 				break;
 					case 4:
-				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("SAS")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("QED")) + "</td>");
 				break;
 					case 5:
-				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("Active")) + "</td>");
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("SAS")) + "</td>");
 				break;
 					case 6:
+				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("Active")) + "</td>");
+				break;
+					case 7:
 				out.println("<td class='td_show' align='center'>" + df.format(result.getDouble("Inactive")) + "</td>");
 				break;
 					}

@@ -50,6 +50,7 @@ try {
 	result = cmd.executeQuery(SqlCommand);
 
     ArrayList list = new ArrayList();
+    list.add("ZINC_ID");
     list.add("SMILES");
     list.add("LogP");
     list.add("QED");
@@ -61,6 +62,7 @@ try {
     int rowNum = 1;
     while(result.next()){
         list = new ArrayList();
+        list.add(result.getString("ZINCID"));
         list.add(result.getString("SMILES"));
         list.add(result.getString("logP"));
         list.add(result.getString("QED"));

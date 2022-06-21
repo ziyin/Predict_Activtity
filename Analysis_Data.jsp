@@ -9,6 +9,15 @@
 <link rel="stylesheet" type="text/css" href="Style/Unite.css"
 	media="screen" />
 
+<style>
+.Menu_Choose {
+	border-width: 3px;
+	border-style: solid;
+	border-color: #D26900;
+	padding: 5px;
+}
+</style>
+
 <script>
 	function Open_() {
 		$(".DS_DIV").slideToggle("slow");
@@ -35,10 +44,9 @@
 </head>
 <body>
 	<div class="Center_DIV">
-		<a href="Analysis_Result.jsp" title="Virtual Screening results.">Results</a>
-		<a href="Analysis_RD.jsp"
-			title="Virtual Screening results distribution.">Results
-			distribution</a>
+		<a href="Analysis_Result.jsp" title="Virtual Screening results." class="Menu_Choose">VS results</a>
+		<a href="Analysis_RD.jsp" title="Virtual Screening results distribution." class="Menu_Choose">Results distribution</a>
+		<font class="Menu_Choose" style="color:#0072E3; font-size: 20px; padding: 5px 10px;font-weight:bold;">DataSet Analysis</font>
 	</div>
 	<hr>
 	<div style="float: left; width: 35%;">
@@ -68,7 +76,7 @@
 				known that they have similar molecular properties.</font>
 		</p>
 		<br />
-		<h1 style="color: #642100">Type</h1>
+		<h1 style="color: #642100">Go to..</h1>
 		<div class="Menu_DIV">
 			<br /> <a onclick="Focuse(0)" style="font-size: 20px;">Split
 				dataset</a><br /> <br /> <a onclick="Open_()"

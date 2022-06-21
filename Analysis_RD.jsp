@@ -11,6 +11,15 @@
 	media="screen" />
 <script src="https://d3js.org/d3.v4.min.js"></script>
 
+<style>
+.Menu_Choose {
+	border-width: 3px;
+	border-style: solid;
+	border-color: #D26900;
+	padding: 5px;
+}
+</style>
+
 <script>
 	function Load_Bar() {
 		var Count_ = [ 146991, 15463, 9804, 7668, 6542, 6180, 6385, 7212, 9628,
@@ -98,9 +107,9 @@
 			type='hidden' name='Act2' id='Act2' value="">
 	</form>
 	<div class="Center_DIV">
-		<a href="Analysis_Data.jsp" title="Data set analysis for model training.">DataSet
-			Analysis</a> <a href="Analysis_Result.jsp"
-			title="Virtual Screening results.">Results</a>
+		<a href="Analysis_Result.jsp" title="Virtual Screening results." class="Menu_Choose">VS results</a>
+		<font class="Menu_Choose" style="color: #0072E3; text-decoration: none; font-size: 20px; font-weight: bold; padding: 5px 10px;">Results distribution</font>
+		<a href="Analysis_Data.jsp" title="Data set analysis for model training." class="Menu_Choose">DataSet Analysis</a> 
 	</div>
 	<hr>
 	<div style="float: left; width: 35%;">
