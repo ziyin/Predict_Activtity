@@ -530,7 +530,7 @@ $(function() {
 		autoOpen : false,
 		resizable : false,
 		draggable : false,
-		minHeight : 320,
+		minHeight : 250,
 		minWidth : 250,
 		open : function(event, ui) {
 			var display =$("#Adv_DIV").css("display");
@@ -960,6 +960,11 @@ $(function() {
 						out.println("<td class='td_show' align='center'>Inactive probability");
 						break;
 					}
+					if(Show_col==0 || Show_col ==1)
+					{
+						out.println("</td>");
+					}
+					else{
 					if (Sort != null) {
 						if (sortdataop[Show_col].equals(Sort[0]) && !sortop[Show_col].equals(" ")) {
 				%>
@@ -989,6 +994,7 @@ $(function() {
 				<%
 				} else {
 				out.println("</td>");
+				}
 				}
 				}
 				out.println("</tr>");
