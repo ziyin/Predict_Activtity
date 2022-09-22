@@ -33,30 +33,15 @@ double neg = 0.0, pos = 0.0;
 		smile = request.getParameter("Smiles");
 		smile = new String(smile.getBytes("iso-8859-1"), "UTF-8");
 
-		Date dNow = new Date();
-		SimpleDateFormat ft = new SimpleDateFormat("MMddHHmmss");
-		String resiData = ft.format(dNow);
-		String path = "C:\\Users\\ZIYIN\\Desktop\\SMILESFILE\\" + resiData + ".csv";
-
-		File file = new File(path);
-		file.getParentFile().mkdirs();
-
-		FileWriter fw = new FileWriter(file);
-		fw.append("activate");
-		fw.append(',');
-		fw.append("SMILES");
-		fw.append('\n');
-		fw.append("0");
-		fw.append(',');
-		fw.append(smile);
-		fw.append('\n');
-		fw.flush();
-		fw.close();
-
+		String res_smiles="";
+		res_smiles=smile.replaceAll("=","\"=\"");
+		res_smiles=res_smiles.replaceAll("[(]","\"(\"");
+		res_smiles=res_smiles.replaceAll("[)]","\")\"");
+		
 		Runtime runtime = Runtime.getRuntime();
 		Process process;
 
-		process = runtime.exec("cmd.exe /c C:\\Users\\ZIYIN\\Desktop\\predict.bat " + resiData);
+		process = runtime.exec("cmd.exe /c C:\\Users\\ZIYIN\\Desktop\\predict.bat " + res_smiles);
 
 		BufferedReader br = new BufferedReader(new InputStreamReader(process.getInputStream()), 30);
 		line = br.readLine();
